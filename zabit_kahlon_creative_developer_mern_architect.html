@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zabit Kahlon — Full-Stack MERN Developer &amp; Creative Technologist</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            display: ['"Space Grotesk"', '"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            canvas: '#FAFAFA',
+            pure: '#FFFFFF',
+            ink: '#111111',
+            slate: '#4A4A4A',
+            muted: '#737373',
+            line: '#EAEAEA',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* Base editorial light canvas and subtle vertical architectural lines */
+    body {
+      background-color: #FAFAFA;
+      color: #111111;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+
+    /* Subtle architectural vertical guide lines inspired by reference */
+    .architectural-grid {
+      background-image:
+        linear-gradient(to right, rgba(17, 17, 17, 0.035) 1px, transparent 1px),
+        linear-gradient(to right, rgba(17, 17, 17, 0.035) 1px, transparent 1px);
+      background-size: 33.333% 100%, 66.666% 100%;
+      background-repeat: no-repeat;
+    }
+
+    /* Reference-matched 2-line display headline */
+    .hero-headline {
+      font-size: clamp(2.35rem, 4.1vw, 4.1rem);
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+    }
+
+    /* Reference-inspired circular accent button */
+    .cta-circle-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 0.5rem 0.65rem 0.25rem;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #111111;
+    }
+
+    .cta-circle-btn::before {
+      content: '';
+      position: absolute;
+      left: -0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3rem;
+      height: 3rem;
+      border-radius: 9999px;
+      background-color: #ECECEC;
+      z-index: -1;
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
+    }
+
+    .cta-circle-btn:hover::before {
+      transform: translateY(-50%) scale(1.12);
+      background-color: #E0E0E0;
+    }
+
+    .cta-circle-btn .cta-arrow {
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .cta-circle-btn:hover .cta-arrow {
+      transform: translateX(5px);
+    }
+
+    /* Large circular backdrop behind hero portrait */
+    .hero-circle-backdrop {
+      position: absolute;
+      width: clamp(320px, 40vw, 560px);
+      height: clamp(320px, 40vw, 560px);
+      border-radius: 9999px;
+      background-color: #FFFFFF;
+      box-shadow: 0 24px 70px rgba(17, 17, 17, 0.04);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Hero portrait container with 12px border radius */
+    .hero-portrait-card {
+      position: relative;
+      z-index: 1;
+      width: clamp(320px, 38vw, 540px);
+      height: clamp(400px, 47vw, 650px);
+      max-width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      filter: drop-shadow(0 20px 38px rgba(17, 17, 17, 0.12));
+    }
+
+    /* Flipped horizontally on the img element and anchored to top center so hover never crops top */
+    .hero-portrait-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      transform-origin: top center;
+      border-radius: 12px;
+      transform: scaleX(-1);
+      transition: filter 0.35s ease;
+    }
+
+    .hero-portrait-card:hover .hero-portrait-img {
+      transform: scaleX(-1);
+      filter: brightness(1.02);
+    }
+
+    /* Vertical scroll indicator text on right edge */
+    .vertical-scroll-label {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+    }
+
+    /* Active filter button state */
+    .filter-btn.is-active {
+      background-color: #111111;
+      color: #FFFFFF;
+      border-color: #111111;
+    }
+
+    /* Subtle nav dot indicator */
+    .nav-link-item {
+      position: relative;
+    }
+
+    .nav-link-item::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: -8px;
+      width: 5px;
+      height: 5px;
+      border-radius: 9999px;
+      background-color: #111111;
+      transform: translateX(-50%) scale(0);
+      transition: transform 0.25s ease;
+    }
+
+    .nav-link-item:hover::after,
+    .nav-link-item.is-current::after {
+      transform: translateX(-50%) scale(1);
+    }
+  </style>
+</head>
+<body class="architectural-grid selection:bg-ink selection:text-pure">
+  <!-- Top Navigation Bar -->
+  <header id="top" class="sticky top-0 z-40 bg-canvas/90 backdrop-blur-md border-b border-line/70">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 h-20 flex items-center justify-between">
+      <!-- Geometric Monogram Brand Mark (ZK) -->
+      <a href="#top" aria-label="Zabit Kahlon Home" class="inline-flex items-center gap-3 group">
+        <svg class="w-10 h-10 text-ink transition-transform duration-300 group-hover:scale-105" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="22" cy="22" r="19" stroke="currentColor" stroke-width="2.75" />
+          <path d="M14 15H29L15 29H30" stroke="currentColor" stroke-width="2.75" stroke-linecap="square" stroke-linejoin="miter" />
+          <circle cx="29" cy="15" r="2.2" fill="currentColor" />
+        </svg>
+        <div class="hidden sm:block leading-none">
+          <span class="font-display font-bold text-sm tracking-tight text-ink block">Zabit Kahlon</span>
+          <span class="text-[11px] font-medium tracking-wider uppercase text-muted">MERN · AI · UI/UX</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav aria-label="Primary Navigation" class="hidden md:flex items-center gap-9 text-xs font-bold tracking-[0.16em] uppercase text-ink">
+        <a href="#top" class="nav-link-item is-current hover:text-muted transition-colors">Home</a>
+        <a href="#about" class="nav-link-item hover:text-muted transition-colors">About</a>
+        <a href="#works" class="nav-link-item hover:text-muted transition-colors">Works</a>
+        <a href="#credentials" class="nav-link-item hover:text-muted transition-colors">CV &amp; Skills</a>
+        <a href="#contact" class="nav-link-item hover:text-muted transition-colors">Contact</a>
+      </nav>
+
+      <!-- Mobile Menu Toggle -->
+      <button
+        id="mobileMenuBtn"
+        type="button"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        class="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-xl border border-line bg-pure text-ink hover:bg-canvas transition cursor-pointer"
+      >
+        <i id="mobileMenuIcon" data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileMenuDrawer" class="hidden md:hidden border-t border-line bg-pure px-5 py-5 space-y-3">
+      <a href="#top" class="mobile-nav-link block py-2 text-xs font-bold tracking-[0.15em] uppercase text-ink">Home</a>
+      <a href="#about" class="mobile-nav-link block py-2 text-xs font-bold tracking-[0.15em] uppercase text-ink">About</a>
+      <a href="#works" class="mobile-nav-link block py-2 text-xs font-bold tracking-[0.15em] uppercase text-ink">Works</a>
+      <a href="#credentials" class="mobile-nav-link block py-2 text-xs font-bold tracking-[0.15em] uppercase text-ink">CV &amp; Skills</a>
+      <a href="#contact" class="mobile-nav-link block py-2 text-xs font-bold tracking-[0.15em] uppercase text-ink">Contact</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section (Reference-Inspired Editorial Layout) -->
+    <section class="relative min-h-[calc(100vh-5rem)] flex items-center py-12 lg:py-16">
+      <div class="max-w-7xl mx-auto w-full px-5 sm:px-8 lg:px-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-6 xl:gap-8">
+          <!-- Left Column: Headline, Intro & Primary Action -->
+          <div class="lg:col-span-5 space-y-6 z-10">
+            <div class="hero-stagger inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-pure border border-line text-[11px] font-bold tracking-[0.14em] uppercase text-slate">
+              <span class="w-2 h-2 rounded-full bg-ink"></span>
+              <span>#OpenToWork · Lahore, Pakistan</span>
+            </div>
+
+            <h1 class="hero-stagger hero-headline font-display font-bold text-ink">
+              <span class="block">full-stack developer</span>
+              <span class="block">&amp; mern architect.</span>
+            </h1>
+
+            <p class="hero-stagger text-slate text-base sm:text-[17px] leading-relaxed max-w-md">
+              Hi, I&apos;m <span class="text-ink font-semibold">Zabit Kahlon</span> — a Full-Stack Developer with <span class="text-ink font-semibold">4 years of hands-on experience</span> in the MERN Stack, AI/LLMs, DevOps &amp; No-Code solutions based in <span class="text-ink font-semibold">Lahore, Pakistan</span>.
+            </p>
+
+            <div class="hero-stagger pt-1">
+              <a href="#works" class="cta-circle-btn">
+                <span>See My Works</span>
+                <i data-lucide="arrow-right" class="cta-arrow w-4 h-4 text-ink"></i>
+              </a>
+            </div>
+
+            <!-- Reference-Style Quick Links Row -->
+            <div class="hero-stagger pt-6 sm:pt-10 flex flex-wrap items-center gap-x-3 gap-y-2 text-xs sm:text-sm font-medium text-ink">
+              <a href="#works" class="underline underline-offset-4 decoration-ink/40 hover:decoration-ink transition">Projects</a>
+              <span class="text-muted">/</span>
+              <a href="#credentials" class="underline underline-offset-4 decoration-ink/40 hover:decoration-ink transition">Resume &amp; Skills</a>
+              <span class="text-muted">/</span>
+              <a href="https://www.instagram.com/mrtabiart/" target="_blank" rel="noopener noreferrer" class="underline underline-offset-4 decoration-ink/40 hover:decoration-ink transition">Instagram (@mrtabiart)</a>
+              <span class="text-muted">/</span>
+              <a href="#contact" class="underline underline-offset-4 decoration-ink/40 hover:decoration-ink transition">LinkedIn</a>
+            </div>
+          </div>
+
+          <!-- Right Column: Large Portrait & Soft Circle Backdrop -->
+          <div class="lg:col-span-7 relative flex items-center justify-center">
+            <div class="hero-circle-backdrop" aria-hidden="true"></div>
+
+            <div class="hero-portrait-card">
+              <img
+                src="https://res.cloudinary.com/amwocoep/image/upload/v1795303225/Gemini_Generated_Image_4j2uv34j2uv34j2u-removebg-preview.png"
+                alt="Zabit Kahlon — Full-Stack MERN Developer"
+                class="hero-portrait-img"
+                onerror="this.onerror=null;this.src='https://res.cloudinary.com/amwocoep/image/upload/v1795302789/Gemini_Generated_Image_4j2uv34j2uv34j2u.jpg';"
+              />
+            </div>
+
+            <!-- Right-Edge Vertical Scroll Cue -->
+            <a
+              href="#about"
+              class="hidden xl:flex flex-col items-center gap-3 absolute right-0 top-1/2 -translate-y-1/2 text-[10px] font-bold tracking-[0.22em] uppercase text-ink hover:text-muted transition"
+              aria-label="Scroll down to About section"
+            >
+              <span class="vertical-scroll-label">Scroll Down</span>
+              <span class="w-[1px] h-12 bg-ink/40"></span>
+              <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Selected Works & Portfolio Projects Section -->
+    <section id="works" class="py-20 sm:py-24 border-t border-line bg-pure/60">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div class="space-y-2">
+            <p class="text-xs font-bold tracking-[0.18em] uppercase text-muted">Selected Portfolio</p>
+            <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-ink">
+              Featured Projects &amp; Builds.
+            </h2>
+            <p class="text-slate text-sm sm:text-base max-w-2xl">
+              Production web applications, AI-enabled workspaces, conversion funnels, and academic platforms built across MERN, modern UI/UX, and no-code ecosystems.
+            </p>
+          </div>
+
+          <!-- Category Filter Buttons -->
+          <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filter projects">
+            <button
+              type="button"
+              data-filter="all"
+              class="filter-btn is-active px-4 py-2 rounded-full text-xs font-bold tracking-wider uppercase border border-line bg-pure text-ink transition cursor-pointer"
+            >
+              All Works
+            </button>
+            <button
+              type="button"
+              data-filter="mern-ai"
+              class="filter-btn px-4 py-2 rounded-full text-xs font-bold tracking-wider uppercase border border-line bg-pure text-ink hover:border-ink transition cursor-pointer"
+            >
+              MERN &amp; AI
+            </button>
+            <button
+              type="button"
+              data-filter="web-funnels"
+              class="filter-btn px-4 py-2 rounded-full text-xs font-bold tracking-wider uppercase border border-line bg-pure text-ink hover:border-ink transition cursor-pointer"
+            >
+              Web &amp; Funnels
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Main Project Cards -->
+        <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-7">
+          <!-- Project 1: Poppy AI -->
+          <article
+            data-category="mern-ai"
+            data-project-id="poppy-ai"
+            class="project-card group bg-pure border border-line rounded-2xl overflow-hidden hover:border-ink/40 hover:shadow-xl transition-all duration-300 flex flex-col"
+          >
+            <div class="relative aspect-[16/10] w-full overflow-hidden bg-canvas border-b border-line">
+              <img
+                src="https://res.cloudinary.com/amwocoep/image/upload/v1794753952/poppyai.png"
+                alt="Poppy AI project preview"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                onerror="this.onerror=null;this.src='https://placehold.co/800x500/F3F4F6/111111?text=Poppy+AI';"
+              />
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between space-y-5">
+              <div class="space-y-2.5">
+                <span class="text-[11px] font-bold tracking-[0.15em] uppercase text-muted block">
+                  AI Workspace · Full-Stack &amp; LLM
+                </span>
+                <h3 class="font-display text-2xl font-bold text-ink">Poppy AI</h3>
+                <p class="text-sm text-slate leading-relaxed">
+                  Visual AI workspace and content generation interface built to organize prompts, reference assets, and structured outputs into an intuitive workflow.
+                </p>
+              </div>
+              <div>
+                <div class="flex flex-wrap gap-2 mb-5">
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">React.js</span>
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">Node.js</span>
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">LLM Workflows</span>
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">TypeScript</span>
+                </div>
+                <button
+                  type="button"
+                  data-open-project="poppy-ai"
+                  class="inline-flex items-center gap-2 text-xs font-bold tracking-[0.14em] uppercase text-ink hover:text-muted transition cursor-pointer"
+                >
+                  <span>Inspect Case Study</span>
+                  <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 2: Snapr Design -->
+          <article
+            data-category="web-funnels"
+            data-project-id="snapr-design"
+            class="project-card group bg-pure border border-line rounded-2xl overflow-hidden hover:border-ink/40 hover:shadow-xl transition-all duration-300 flex flex-col"
+          >
+            <div class="relative aspect-[16/10] w-full overflow-hidden bg-canvas border-b border-line">
+              <img
+                src="https://res.cloudinary.com/amwocoep/image/upload/v1794753960/snaprdesign.png"
+                alt="Snapr Design project preview"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                onerror="this.onerror=null;this.src='https://placehold.co/800x500/F3F4F6/111111?text=Snapr+Design';"
+              />
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between space-y-5">
+              <div class="space-y-2.5">
+                <span class="text-[11px] font-bold tracking-[0.15em] uppercase text-muted block">
+                  Creative Agency · Web &amp; UI/UX
+                </span>
+                <h3 class="font-display text-2xl font-bold text-ink">Snapr Design</h3>
+                <p class="text-sm text-slate leading-relaxed">
+                  Clean agency web experience featuring structured sections, responsive visual polish, fast loading, and on-page SEO readiness.
+                </p>
+              </div>
+              <div>
+                <div class="flex flex-wrap gap-2 mb-5">
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">UI/UX Design</span>
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">React.js</span>
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">On-Page SEO</span>
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">Responsive Web</span>
+                </div>
+                <button
+                  type="button"
+                  data-open-project="snapr-design"
+                  class="inline-flex items-center gap-2 text-xs font-bold tracking-[0.14em] uppercase text-ink hover:text-muted transition cursor-pointer"
+                >
+                  <span>Inspect Case Study</span>
+                  <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 3: SLK Coaching -->
+          <article
+            data-category="web-funnels"
+            data-project-id="slk-coaching"
+            class="project-card group bg-pure border border-line rounded-2xl overflow-hidden hover:border-ink/40 hover:shadow-xl transition-all duration-300 flex flex-col"
+          >
+            <div class="relative aspect-[16/10] w-full overflow-hidden bg-canvas border-b border-line">
+              <img
+                src="https://res.cloudinary.com/amwocoep/image/upload/v1794753961/Slk-coaching.png"
+                alt="SLK Coaching project preview"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                onerror="this.onerror=null;this.src='https://placehold.co/800x500/F3F4F6/111111?text=SLK+Coaching';"
+              />
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between space-y-5">
+              <div class="space-y-2.5">
+                <span class="text-[11px] font-bold tracking-[0.15em] uppercase text-muted block">
+                  Coaching Platform · Funnels &amp; Growth
+                </span>
+                <h3 class="font-display text-2xl font-bold text-ink">SLK Coaching</h3>
+                <p class="text-sm text-slate leading-relaxed">
+                  Conversion-oriented coaching site and funnel journey designed to turn visitor traffic into qualified calls, program inquiries, and client growth.
+                </p>
+              </div>
+              <div>
+                <div class="flex flex-wrap gap-2 mb-5">
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">GoHighLevel (GHL)</span>
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">ClickFunnels</span>
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">Conversion UX</span>
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">SEO</span>
+                </div>
+                <button
+                  type="button"
+                  data-open-project="slk-coaching"
+                  class="inline-flex items-center gap-2 text-xs font-bold tracking-[0.14em] uppercase text-ink hover:text-muted transition cursor-pointer"
+                >
+                  <span>Inspect Case Study</span>
+                  <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 4: Numlobe (OBE LMS) -->
+          <article
+            data-category="mern-ai"
+            data-project-id="numlobe-lms"
+            class="project-card group bg-pure border border-line rounded-2xl overflow-hidden hover:border-ink/40 hover:shadow-xl transition-all duration-300 flex flex-col"
+          >
+            <div class="relative aspect-[16/10] w-full overflow-hidden bg-canvas border-b border-line">
+              <img
+                src="https://res.cloudinary.com/amwocoep/image/upload/v1794753954/Numlobe.jpg"
+                alt="Numlobe OBE LMS Final Year Project preview"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                onerror="this.onerror=null;this.src='https://placehold.co/800x500/F3F4F6/111111?text=Numlobe+OBE+LMS';"
+              />
+            </div>
+            <div class="p-6 flex-1 flex flex-col justify-between space-y-5">
+              <div class="space-y-2.5">
+                <span class="text-[11px] font-bold tracking-[0.15em] uppercase text-muted block">
+                  Final Year Project · OBE LMS (MERN)
+                </span>
+                <h3 class="font-display text-2xl font-bold text-ink">Numlobe (OBE LMS)</h3>
+                <p class="text-sm text-slate leading-relaxed">
+                  Outcome-Based Education Learning Management System built as a Final Year Project to manage courses, learning outcomes, assessments, and academic workflows.
+                </p>
+              </div>
+              <div>
+                <div class="flex flex-wrap gap-2 mb-5">
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">MongoDB</span>
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">Express.js</span>
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">React.js</span>
+                  <span class="px-2.5 py-1 rounded-md bg-canvas border border-line text-xs font-medium text-slate">Node.js · JWT</span>
+                </div>
+                <button
+                  type="button"
+                  data-open-project="numlobe-lms"
+                  class="inline-flex items-center gap-2 text-xs font-bold tracking-[0.14em] uppercase text-ink hover:text-muted transition cursor-pointer"
+                >
+                  <span>Inspect Case Study</span>
+                  <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Additional CV Builds Strip -->
+        <div class="mt-8 p-5 sm:p-6 rounded-2xl bg-canvas border border-line flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <p class="text-[11px] font-bold tracking-[0.15em] uppercase text-muted">Additional CV Builds</p>
+            <p class="text-sm font-medium text-ink">
+              Digital University Project · E-Commerce Store · Task Management System · Custom Chatbots &amp; LLM Integrations
+            </p>
+          </div>
+          <a
+            href="#contact"
+            class="inline-flex items-center gap-2 text-xs font-bold tracking-[0.14em] uppercase text-ink hover:text-muted whitespace-nowrap transition"
+          >
+            <span>Request Walkthrough</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Me & Experience Section -->
+    <section id="about" class="py-20 sm:py-24 border-t border-line">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+          <div class="lg:col-span-5 space-y-4">
+            <p class="text-xs font-bold tracking-[0.18em] uppercase text-muted">About Zabit Kahlon</p>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-ink">
+              Engineering scalable web apps with design &amp; growth in mind.
+            </h2>
+            <p class="text-slate text-sm sm:text-base leading-relaxed">
+              Full-stack MERN developer, visual artist (<span class="text-ink font-semibold">@mrtabiart</span>), and practical problem-solver focused on shipping reliable digital products.
+            </p>
+
+            <!-- Highlights Metrics -->
+            <div class="grid grid-cols-2 gap-4 pt-3">
+              <div class="p-4 rounded-xl bg-pure border border-line">
+                <p class="font-display text-2xl sm:text-3xl font-bold text-ink">4 Years</p>
+                <p class="text-xs text-muted mt-1">Hands-On Full-Stack &amp; MERN Experience</p>
+              </div>
+              <div class="p-4 rounded-xl bg-pure border border-line">
+                <p class="font-display text-2xl sm:text-3xl font-bold text-ink">2 Years</p>
+                <p class="text-xs text-muted mt-1">Client Freelancing &amp; Custom Solutions</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 space-y-5 text-slate text-sm sm:text-base leading-relaxed bg-pure border border-line rounded-2xl p-6 sm:p-8">
+            <p>
+              I&apos;m <span class="text-ink font-semibold">Zabit Kahlon</span>, a Full-Stack Web Developer with 4 years of hands-on experience in the <span class="text-ink font-semibold">MERN Stack</span>. I specialize in building scalable, high-performance web applications and developing digital solutions that align with business objectives and drive sustainable growth.
+            </p>
+            <p>
+              Alongside full-stack development, I bring <span class="text-ink font-semibold">2 years of freelance experience</span> working directly with clients to build custom web applications using <span class="text-ink font-semibold">MongoDB, Express.js, React, and Node.js</span>, as well as no-code and low-code platforms including <span class="text-ink font-semibold">GoHighLevel (GHL), Elementor, ClickFunnels, and Shopify</span>.
+            </p>
+            <p>
+              Beyond core development, I combine technical engineering with <span class="text-ink font-semibold">Digital Marketing &amp; On/Off-Page SEO</span>, <span class="text-ink font-semibold">DevOps (AWS EC2, Docker, GitHub Actions)</span>, and modern <span class="text-ink font-semibold">AI technologies, chatbots, and Large Language Models (LLMs)</span>. As a visual artist sharing artwork on Instagram at <span class="text-ink font-semibold">@mrtabiart</span>, visual craft stays central to everything I build.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CV Credentials: Technical Stack, Education, Certifications, Strengths & Languages -->
+    <section id="credentials" class="py-20 sm:py-24 border-t border-line bg-pure/60">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 space-y-12">
+        <div class="space-y-2 max-w-2xl">
+          <p class="text-xs font-bold tracking-[0.18em] uppercase text-muted">Curriculum Vitae</p>
+          <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-ink">
+            Technical Stack, Education &amp; Certifications.
+          </h2>
+        </div>
+
+        <!-- Technical Skills Matrix -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div class="p-6 rounded-2xl bg-pure border border-line space-y-3">
+            <h3 class="font-display text-base font-bold text-ink">Full-Stack &amp; MERN</h3>
+            <p class="text-xs sm:text-sm text-slate leading-relaxed">
+              MongoDB, Mongoose, Express.js, React.js, Node.js, TypeScript, JavaScript, RESTful APIs, JWT Token, Three.js, Framer Motion, .NET
+            </p>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-pure border border-line space-y-3">
+            <h3 class="font-display text-base font-bold text-ink">DevOps, Cloud &amp; AI/LLMs</h3>
+            <p class="text-xs sm:text-sm text-slate leading-relaxed">
+              AWS EC2, Docker, GitHub Actions, Firebase, AI Chatbots &amp; Large Language Models (LLMs) integration
+            </p>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-pure border border-line space-y-3">
+            <h3 class="font-display text-base font-bold text-ink">No-Code &amp; Web UI</h3>
+            <p class="text-xs sm:text-sm text-slate leading-relaxed">
+              GoHighLevel (GHL), Elementor, ClickFunnels, Shopify, UI/UX Design, CSS, Bootstrap
+            </p>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-pure border border-line space-y-3">
+            <h3 class="font-display text-base font-bold text-ink">SEO &amp; Growth</h3>
+            <p class="text-xs sm:text-sm text-slate leading-relaxed">
+              Digital Marketing, On-Page SEO, Off-Page SEO, Funnel Architecture &amp; performance-focused web delivery
+            </p>
+          </div>
+        </div>
+
+        <!-- Education & Certifications -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-7">
+          <!-- Education -->
+          <div class="p-6 sm:p-8 rounded-2xl bg-pure border border-line space-y-6">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="graduation-cap" class="w-5 h-5 text-ink"></i>
+              <h3 class="font-display text-xl font-bold text-ink">Education</h3>
+            </div>
+
+            <div class="space-y-5">
+              <div class="pb-5 border-b border-line">
+                <p class="text-xs font-bold tracking-wider uppercase text-muted">Bachelor&apos;s Degree</p>
+                <h4 class="font-display text-lg font-bold text-ink mt-1">Bachelor of Computer Science</h4>
+                <p class="text-sm text-slate">National University of Modern Languages (NUML)</p>
+              </div>
+              <div>
+                <p class="text-xs font-bold tracking-wider uppercase text-muted">Intermediate</p>
+                <h4 class="font-display text-lg font-bold text-ink mt-1">Intermediate in Pre-Medical</h4>
+                <p class="text-sm text-slate">Agha Khan College</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Certifications -->
+          <div class="p-6 sm:p-8 rounded-2xl bg-pure border border-line space-y-6">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="award" class="w-5 h-5 text-ink"></i>
+              <h3 class="font-display text-xl font-bold text-ink">Certifications</h3>
+            </div>
+
+            <ul class="space-y-3 text-sm text-slate">
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-ink mt-2 shrink-0"></span>
+                <span><strong class="text-ink">Udemy:</strong> Complete React Developer (Redux, Hooks, State Management)</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-ink mt-2 shrink-0"></span>
+                <span><strong class="text-ink">Code With Harry:</strong> React Development Course</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-ink mt-2 shrink-0"></span>
+                <span><strong class="text-ink">Bootcamp:</strong> 100 Days of Code Web Development Bootcamp</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-ink mt-2 shrink-0"></span>
+                <span><strong class="text-ink">Udemy:</strong> GitHub Course</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-ink mt-2 shrink-0"></span>
+                <span><strong class="text-ink">TechZeen:</strong> DevOps Course</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Strengths & Languages -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-7">
+          <div class="lg:col-span-8 p-6 sm:p-8 rounded-2xl bg-pure border border-line space-y-4">
+            <h3 class="font-display text-lg font-bold text-ink">Core Strengths</h3>
+            <div class="flex flex-wrap gap-2.5">
+              <span class="px-3.5 py-1.5 rounded-full bg-canvas border border-line text-xs font-semibold text-ink">Problem Solving</span>
+              <span class="px-3.5 py-1.5 rounded-full bg-canvas border border-line text-xs font-semibold text-ink">Team Collaboration</span>
+              <span class="px-3.5 py-1.5 rounded-full bg-canvas border border-line text-xs font-semibold text-ink">Time Management</span>
+              <span class="px-3.5 py-1.5 rounded-full bg-canvas border border-line text-xs font-semibold text-ink">Creative Designs</span>
+              <span class="px-3.5 py-1.5 rounded-full bg-canvas border border-line text-xs font-semibold text-ink">Self Motivated</span>
+              <span class="px-3.5 py-1.5 rounded-full bg-canvas border border-line text-xs font-semibold text-ink">Adaptable</span>
+              <span class="px-3.5 py-1.5 rounded-full bg-canvas border border-line text-xs font-semibold text-ink">Detail Oriented</span>
+              <span class="px-3.5 py-1.5 rounded-full bg-canvas border border-line text-xs font-semibold text-ink">Love to Grow</span>
+            </div>
+          </div>
+
+          <div class="lg:col-span-4 p-6 sm:p-8 rounded-2xl bg-pure border border-line space-y-4">
+            <h3 class="font-display text-lg font-bold text-ink">Languages</h3>
+            <div class="flex flex-wrap gap-2.5">
+              <span class="px-3.5 py-1.5 rounded-full bg-ink text-pure text-xs font-semibold">English</span>
+              <span class="px-3.5 py-1.5 rounded-full bg-canvas border border-line text-xs font-semibold text-ink">Urdu</span>
+              <span class="px-3.5 py-1.5 rounded-full bg-canvas border border-line text-xs font-semibold text-ink">Punjabi</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 sm:py-24 border-t border-line">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          <div class="lg:col-span-5 space-y-5">
+            <p class="text-xs font-bold tracking-[0.18em] uppercase text-muted">Get In Touch</p>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-ink">
+              Let&apos;s build something impactful together.
+            </h2>
+            <p class="text-slate text-sm sm:text-base leading-relaxed">
+              Open to full-stack MERN roles, freelance projects, AI/LLM integrations, and high-converting web builds.
+            </p>
+
+            <div class="space-y-4 pt-2">
+              <div class="p-4 rounded-xl bg-pure border border-line flex items-center justify-between gap-3">
+                <div>
+                  <span class="text-[11px] font-bold tracking-wider uppercase text-muted block">Email</span>
+                  <a href="mailto:mrtabiart@gmail.com" class="text-sm font-semibold text-ink hover:underline">mrtabiart@gmail.com</a>
+                </div>
+                <button
+                  id="copyEmailBtn"
+                  type="button"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-line bg-canvas text-xs font-semibold text-ink hover:border-ink transition cursor-pointer"
+                >
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                  <span id="copyEmailText">Copy</span>
+                </button>
+              </div>
+
+              <div class="p-4 rounded-xl bg-pure border border-line">
+                <span class="text-[11px] font-bold tracking-wider uppercase text-muted block">Phone / WhatsApp</span>
+                <a href="tel:+923344806283" class="text-sm font-semibold text-ink hover:underline">+92 334 4806283</a>
+              </div>
+
+              <div class="p-4 rounded-xl bg-pure border border-line">
+                <span class="text-[11px] font-bold tracking-wider uppercase text-muted block">Location</span>
+                <span class="text-sm font-semibold text-ink">Lahore, Punjab, Pakistan</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Contact Inquiry Form -->
+          <div class="lg:col-span-7 bg-pure border border-line rounded-2xl p-6 sm:p-8">
+            <form id="contactForm" class="space-y-5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="senderName" class="block text-xs font-bold tracking-wider uppercase text-ink mb-2">Your Name</label>
+                  <input
+                    id="senderName"
+                    name="name"
+                    type="text"
+                    required
+                    placeholder="Alex Morgan"
+                    class="w-full px-4 py-3 rounded-xl bg-canvas border border-line text-sm text-ink focus:outline-none focus:border-ink transition"
+                  />
+                </div>
+                <div>
+                  <label for="senderEmail" class="block text-xs font-bold tracking-wider uppercase text-ink mb-2">Email Address</label>
+                  <input
+                    id="senderEmail"
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="alex@company.com"
+                    class="w-full px-4 py-3 rounded-xl bg-canvas border border-line text-sm text-ink focus:outline-none focus:border-ink transition"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label for="projectScope" class="block text-xs font-bold tracking-wider uppercase text-ink mb-2">Project or Opportunity Type</label>
+                <select
+                  id="projectScope"
+                  name="scope"
+                  class="w-full px-4 py-3 rounded-xl bg-canvas border border-line text-sm text-ink focus:outline-none focus:border-ink transition"
+                >
+                  <option value="Full-Stack MERN Application">Full-Stack MERN Application</option>
+                  <option value="AI / Chatbot / LLM Integration">AI / Chatbot / LLM Integration</option>
+                  <option value="GoHighLevel / Elementor / Funnel Build">GoHighLevel / Elementor / Funnel Build</option>
+                  <option value="SEO & Web Optimization">SEO &amp; Web Optimization</option>
+                  <option value="Full-Time / Contract Role">Full-Time / Contract Role</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="projectMessage" class="block text-xs font-bold tracking-wider uppercase text-ink mb-2">Message</label>
+                <textarea
+                  id="projectMessage"
+                  name="message"
+                  rows="4"
+                  required
+                  placeholder="Share your project timeline, goals, or role details..."
+                  class="w-full px-4 py-3 rounded-xl bg-canvas border border-line text-sm text-ink focus:outline-none focus:border-ink transition"
+                ></textarea>
+              </div>
+
+              <div class="flex flex-wrap items-center justify-between gap-4">
+                <button
+                  type="submit"
+                  class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-ink text-pure text-xs font-bold tracking-[0.14em] uppercase hover:bg-slate transition cursor-pointer"
+                >
+                  <span>Send Inquiry</span>
+                  <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+                <p id="contactStatusMessage" class="text-xs sm:text-sm font-medium text-ink hidden" role="status"></p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-line bg-pure py-8">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted">
+      <p>© <span id="currentYear">2026</span> Zabit Kahlon. All rights reserved.</p>
+      <div class="flex items-center gap-5">
+        <a href="#top" class="hover:text-ink transition">Home</a>
+        <a href="#works" class="hover:text-ink transition">Works</a>
+        <a href="#credentials" class="hover:text-ink transition">CV</a>
+        <a href="https://www.instagram.com/mrtabiart/" target="_blank" rel="noopener noreferrer" class="hover:text-ink transition">Instagram</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Project Case Study Modal -->
+  <div
+    id="projectModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 bg-ink/60"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalProjectTitle"
+  >
+    <div id="projectModalCard" class="relative w-full max-w-2xl bg-pure border border-line rounded-2xl overflow-hidden shadow-2xl max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-line bg-canvas">
+        <span id="modalProjectCategory" class="text-[11px] font-bold tracking-[0.16em] uppercase text-muted">
+          PROJECT PREVIEW
+        </span>
+        <button
+          id="closeModalBtn"
+          type="button"
+          aria-label="Close project modal"
+          class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-line bg-pure text-ink hover:bg-ink hover:text-pure transition cursor-pointer"
+        >
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="overflow-y-auto p-6 space-y-5">
+        <div class="aspect-[16/9] w-full rounded-xl overflow-hidden bg-canvas border border-line">
+          <img id="modalProjectImage" src="" alt="" class="w-full h-full object-cover" />
+        </div>
+
+        <div>
+          <h3 id="modalProjectTitle" class="font-display text-2xl font-bold text-ink mb-2"></h3>
+          <p id="modalProjectSummary" class="text-sm sm:text-base text-slate leading-relaxed"></p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-4 rounded-xl bg-canvas border border-line">
+            <p class="text-[11px] font-bold tracking-[0.14em] uppercase text-muted mb-1">Architecture Highlights</p>
+            <p id="modalProjectArchitecture" class="text-xs sm:text-sm text-slate leading-relaxed"></p>
+          </div>
+          <div class="p-4 rounded-xl bg-canvas border border-line">
+            <p class="text-[11px] font-bold tracking-[0.14em] uppercase text-muted mb-1">Key Deliverables</p>
+            <p id="modalProjectDeliverables" class="text-xs sm:text-sm text-slate leading-relaxed"></p>
+          </div>
+        </div>
+
+        <div id="modalProjectTags" class="flex flex-wrap gap-2"></div>
+
+        <div class="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-line">
+          <span class="text-xs text-muted">Built by Zabit Kahlon · MERN &amp; Digital Solutions</span>
+          <a
+            id="modalProjectLiveLink"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-ink text-pure text-xs font-bold uppercase tracking-wider hover:bg-slate transition"
+          >
+            <span>Open Preview Image</span>
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Interactive & GSAP Script -->
+  <script>
+    (function () {
+      const PROJECTS_DATA = {
+        'poppy-ai': {
+          title: 'Poppy AI',
+          category: 'AI WORKSPACE · FULL-STACK & LLM',
+          image: 'https://res.cloudinary.com/amwocoep/image/upload/v1794753952/poppyai.png',
+          liveUrl: 'https://res.cloudinary.com/amwocoep/image/upload/v1794753952/poppyai.png',
+          summary:
+            'Visual AI workspace and content generation interface built to organize prompts, reference assets, and structured outputs into an intuitive workflow for creators and teams.',
+          architecture:
+            'Component-based React state canvas backed by Node.js endpoints, structured prompt contexts, and responsive multi-panel views.',
+          deliverables:
+            'Visual prompt & reference board UI, structured generation flow, and responsive workspace experience.',
+          tags: ['React.js', 'Node.js', 'LLM Workflows', 'TypeScript', 'RESTful APIs'],
+        },
+        'snapr-design': {
+          title: 'Snapr Design',
+          category: 'CREATIVE AGENCY · WEB & UI/UX',
+          image: 'https://res.cloudinary.com/amwocoep/image/upload/v1794753960/snaprdesign.png',
+          liveUrl: 'https://res.cloudinary.com/amwocoep/image/upload/v1794753960/snaprdesign.png',
+          summary:
+            'Clean agency web experience featuring structured sections, responsive visual polish, fast loading, and on-page SEO readiness.',
+          architecture:
+            'Modular front-end sections with crisp typographic hierarchy, optimized media assets, and accessible layout structure.',
+          deliverables:
+            'Agency landing page, service overview blocks, responsive layout system, and SEO-friendly markup.',
+          tags: ['UI/UX Design', 'React.js', 'On-Page SEO', 'Responsive Web'],
+        },
+        'slk-coaching': {
+          title: 'SLK Coaching',
+          category: 'COACHING PLATFORM · FUNNELS & GROWTH',
+          image: 'https://res.cloudinary.com/amwocoep/image/upload/v1794753961/Slk-coaching.png',
+          liveUrl: 'https://res.cloudinary.com/amwocoep/image/upload/v1794753961/Slk-coaching.png',
+          summary:
+            'Conversion-oriented coaching site and funnel journey designed to turn visitor traffic into qualified calls, program inquiries, and client growth.',
+          architecture:
+            'Structured landing & conversion funnel flow paired with clear value propositions, lead capture touchpoints, and search visibility.',
+          deliverables:
+            'Funnel landing pages, coaching offer presentation, lead intake flow, and on-page optimization.',
+          tags: ['GoHighLevel (GHL)', 'ClickFunnels', 'Conversion UX', 'SEO'],
+        },
+        'numlobe-lms': {
+          title: 'Numlobe (OBE LMS)',
+          category: 'FINAL YEAR PROJECT · OBE LMS (MERN)',
+          image: 'https://res.cloudinary.com/amwocoep/image/upload/v1794753954/Numlobe.jpg',
+          liveUrl: 'https://res.cloudinary.com/amwocoep/image/upload/v1794753954/Numlobe.jpg',
+          summary:
+            'Outcome-Based Education Learning Management System built as a Final Year Project to manage courses, learning outcomes, assessments, and academic workflows.',
+          architecture:
+            'MongoDB & Mongoose schemas with Express REST APIs, JWT authentication, and structured outcome-to-assessment mapping.',
+          deliverables:
+            'Course & outcome tracking views, assessment workflows, role-based access structure, and academic reporting.',
+          tags: ['MongoDB', 'Express.js', 'React.js', 'Node.js', 'JWT Token'],
+        },
+      };
+
+      // Update copyright year safely
+      const yearEl = document.getElementById('currentYear');
+      if (yearEl) {
+        yearEl.textContent = String(new Date().getFullYear());
+      }
+
+      // Initialize Lucide icons safely
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        try {
+          window.lucide.createIcons();
+        } catch (err) {
+          console.error('Lucide icon initialization failed:', err);
+        }
+      }
+
+      // Mobile navigation menu toggle
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const mobileMenuDrawer = document.getElementById('mobileMenuDrawer');
+      const mobileMenuIcon = document.getElementById('mobileMenuIcon');
+
+      if (mobileMenuBtn && mobileMenuDrawer) {
+        mobileMenuBtn.addEventListener('click', () => {
+          const isHidden = mobileMenuDrawer.classList.contains('hidden');
+          mobileMenuDrawer.classList.toggle('hidden', !isHidden);
+          mobileMenuBtn.setAttribute('aria-expanded', String(isHidden));
+          if (mobileMenuIcon) {
+            mobileMenuIcon.setAttribute('data-lucide', isHidden ? 'x' : 'menu');
+            if (window.lucide && typeof window.lucide.createIcons === 'function') {
+              window.lucide.createIcons();
+            }
+          }
+        });
+
+        document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+          link.addEventListener('click', () => {
+            mobileMenuDrawer.classList.add('hidden');
+            mobileMenuBtn.setAttribute('aria-expanded', 'false');
+          });
+        });
+      }
+
+      // Project category filter buttons
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const projectCards = document.querySelectorAll('#projectsGrid .project-card');
+
+      filterButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const selectedFilter = btn.getAttribute('data-filter') || 'all';
+
+          filterButtons.forEach((b) => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+
+          projectCards.forEach((card) => {
+            const cardCategory = card.getAttribute('data-category');
+            const matches = selectedFilter === 'all' || cardCategory === selectedFilter;
+            card.classList.toggle('hidden', !matches);
+          });
+        });
+      });
+
+      // Project case study modal logic
+      const modalEl = document.getElementById('projectModal');
+      const modalCardEl = document.getElementById('projectModalCard');
+      const closeModalBtn = document.getElementById('closeModalBtn');
+      const modalCategoryEl = document.getElementById('modalProjectCategory');
+      const modalTitleEl = document.getElementById('modalProjectTitle');
+      const modalSummaryEl = document.getElementById('modalProjectSummary');
+      const modalArchitectureEl = document.getElementById('modalProjectArchitecture');
+      const modalDeliverablesEl = document.getElementById('modalProjectDeliverables');
+      const modalLiveLinkEl = document.getElementById('modalProjectLiveLink');
+      const modalImageEl = document.getElementById('modalProjectImage');
+      const modalTagsEl = document.getElementById('modalProjectTags');
+
+      function openProjectModal(projectId) {
+        const project = PROJECTS_DATA[projectId];
+        if (!project || !modalEl) return;
+
+        if (modalCategoryEl) modalCategoryEl.textContent = project.category;
+        if (modalTitleEl) modalTitleEl.textContent = project.title;
+        if (modalSummaryEl) modalSummaryEl.textContent = project.summary;
+        if (modalArchitectureEl) modalArchitectureEl.textContent = project.architecture || '';
+        if (modalDeliverablesEl) modalDeliverablesEl.textContent = project.deliverables || '';
+        if (modalLiveLinkEl) {
+          modalLiveLinkEl.href = project.liveUrl || project.image;
+        }
+        if (modalImageEl) {
+          modalImageEl.src = project.image;
+          modalImageEl.alt = project.title;
+        }
+        if (modalTagsEl) {
+          modalTagsEl.innerHTML = '';
+          project.tags.forEach((tag) => {
+            const badge = document.createElement('span');
+            badge.className = 'px-3 py-1 rounded-full bg-canvas border border-line text-xs font-semibold text-ink';
+            badge.textContent = tag;
+            modalTagsEl.appendChild(badge);
+          });
+        }
+
+        modalEl.classList.remove('hidden');
+        modalEl.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+
+        if (window.gsap && modalCardEl) {
+          gsap.fromTo(
+            modalCardEl,
+            { opacity: 0, y: 18, scale: 0.98 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.28, ease: 'power2.out', clearProps: 'transform,opacity' }
+          );
+        }
+      }
+
+      function closeProjectModal() {
+        if (!modalEl) return;
+        modalEl.classList.add('hidden');
+        modalEl.classList.remove('flex');
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('[data-open-project]').forEach((trigger) => {
+        trigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = trigger.getAttribute('data-open-project');
+          if (id) openProjectModal(id);
+        });
+      });
+
+      projectCards.forEach((card) => {
+        card.addEventListener('click', () => {
+          const id = card.getAttribute('data-project-id');
+          if (id) openProjectModal(id);
+        });
+      });
+
+      if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeProjectModal);
+      }
+
+      if (modalEl) {
+        modalEl.addEventListener('click', (e) => {
+          if (e.target === modalEl) closeProjectModal();
+        });
+      }
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalEl && !modalEl.classList.contains('hidden')) {
+          closeProjectModal();
+        }
+      });
+
+      // Copy email button helper
+      const copyEmailBtn = document.getElementById('copyEmailBtn');
+      const copyEmailText = document.getElementById('copyEmailText');
+      if (copyEmailBtn) {
+        copyEmailBtn.addEventListener('click', () => {
+          const email = 'mrtabiart@gmail.com';
+          let copied = false;
+
+          try {
+            const tempInput = document.createElement('input');
+            tempInput.value = email;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            copied = document.execCommand('copy');
+            document.body.removeChild(tempInput);
+          } catch (_) {
+            copied = false;
+          }
+
+          if (!copied && navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(email).catch(() => {});
+          }
+
+          if (copyEmailText) {
+            copyEmailText.textContent = 'Copied';
+            setTimeout(() => {
+              copyEmailText.textContent = 'Copy';
+            }, 1800);
+          }
+        });
+      }
+
+      // Contact form submission handler
+      const contactForm = document.getElementById('contactForm');
+      const contactStatusMessage = document.getElementById('contactStatusMessage');
+      if (contactForm && contactStatusMessage) {
+        contactForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const nameInput = document.getElementById('senderName');
+          const senderName = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'there';
+
+          contactStatusMessage.textContent = `Thanks, ${senderName}! Your inquiry has been noted — you can also email mrtabiart@gmail.com or call +92 334 4806283 directly.`;
+          contactStatusMessage.classList.remove('hidden');
+          contactForm.reset();
+        });
+      }
+
+      // GSAP Animations safely inside gsap.context() with clearProps so elements always settle cleanly
+      window.addEventListener('load', () => {
+        if (!window.gsap) return;
+
+        try {
+          if (window.ScrollTrigger) {
+            gsap.registerPlugin(ScrollTrigger);
+          }
+
+          const ctx = gsap.context(() => {
+            gsap.from('.hero-stagger', {
+              y: 20,
+              opacity: 0,
+              duration: 0.7,
+              stagger: 0.08,
+              ease: 'power2.out',
+              clearProps: 'transform,opacity',
+            });
+
+            gsap.from('.hero-portrait-card', {
+              y: 24,
+              opacity: 0,
+              duration: 0.85,
+              delay: 0.12,
+              ease: 'power2.out',
+              clearProps: 'transform,opacity',
+            });
+
+            if (window.ScrollTrigger) {
+              gsap.from('#works .project-card', {
+                y: 22,
+                opacity: 0,
+                duration: 0.65,
+                stagger: 0.1,
+                ease: 'power2.out',
+                clearProps: 'transform,opacity',
+                scrollTrigger: {
+                  trigger: '#projectsGrid',
+                  start: 'top 86%',
+                  once: true,
+                },
+              });
+            }
+          });
+
+          const fallbackTimer = setTimeout(() => {
+            gsap.set('.hero-stagger, .hero-portrait-card, #works .project-card', {
+              opacity: 1,
+              y: 0,
+              clearProps: 'transform,opacity',
+            });
+          }, 1800);
+
+          window.addEventListener('unload', () => {
+            clearTimeout(fallbackTimer);
+            ctx.revert();
+          });
+        } catch (err) {
+          console.error('GSAP animation error:', err);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
